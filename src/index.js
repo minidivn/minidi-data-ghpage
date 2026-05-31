@@ -16,9 +16,11 @@ import { validateConfig } from "./config/validate.js";
 import { initI18n } from "./utils/i18n.js";
 import { initPrefs, loadPrefs, applyTheme } from "./utils/preferences.js";
 import { setLang } from "./utils/i18n.js";
-import "./app-shell.js";
 
-export { MiniApp } from "./app-shell.js";
+// NOTE: app-shell.js is NOT imported statically here.
+// It is loaded dynamically inside createMiniDiApp() after config is set.
+// This avoids a race where component constructors call getConfig() before
+// createMiniDiApp() has stored the config.
 
 export * from "./utils/i18n.js";
 export * from "./utils/data-loader.js";
@@ -33,7 +35,7 @@ export * from "./utils/wikidata-fetcher.js";
  *
  * @param {object} config - Country/repo configuration object
  */
-export function createMiniDiApp(config) {
+export async function createMiniDiApp(config) {
   const validated = validateConfig(config);
 
   // 1. Store config globally so all components can read it
@@ -49,4 +51,8 @@ export function createMiniDiApp(config) {
   const prefs = loadPrefs();
   setLang(prefs.lang);
   applyTheme(prefs.theme);
+
+  // 5. Load app shell (and all components) AFTER config is ready.
+  //    This ensures component constructors can safely call getConfig().
+  await import("./app-shell.js");
 }
