@@ -26,7 +26,7 @@ export const DEFAULTS = {
   githubRepo: "",
   dataSource: "WikiData",
 
-  dataPath: "index.json",
+  dataPath: "_data/index.json",
 
   chatCountry: "",
   chatGreeting: "Ask me about the knowledge graph.",

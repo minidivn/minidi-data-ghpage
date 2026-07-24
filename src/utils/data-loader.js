@@ -1,5 +1,5 @@
 /**
- * Loads index.json with XHR progress tracking.
+ * Loads the data index (default _data/index.json) with XHR progress tracking.
  */
 export function loadData(onProgress, dataPath) {
   const path = dataPath || "index.json";
