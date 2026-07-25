@@ -155,33 +155,58 @@ export class MiniApp extends LitElement {
   }
 
   _initRouting() {
-    const p = new URLSearchParams(location.search);
-    const entityRaw = p.get("entity");
-    if (entityRaw) this._pendingEntityFromUrl = entityRaw.split("/")[0];
-    if (p.has("view")) this.currentView = p.get("view");
-    window.addEventListener("popstate", () => {
-      const q = new URLSearchParams(location.search);
-      if (q.has("entity")) {
-        const id = q.get("entity")?.split("/")[0];
-        const n = this.data?.nodes?.find((n) => n.id === id);
-        if (n) { this.entityDetail = n; this.currentView = "detail"; }
+    const hash = location.hash.substring(1);
+    if (hash) {
+      this._pendingEntityFromUrl = hash;
+    } else {
+      const p = new URLSearchParams(location.search);
+      const entityRaw = p.get("entity");
+      if (entityRaw) this._pendingEntityFromUrl = entityRaw.split("/")[0];
+      if (p.has("view")) this.currentView = p.get("view");
+    }
+
+    window.addEventListener("hashchange", () => {
+      const h = location.hash.substring(1);
+      if (h) {
+        const n = this.data?.nodes?.find((n) => n.id === h);
+        if (n) {
+          this.entityDetail = n;
+          this.currentView = "detail";
+          this.requestUpdate();
+        }
       } else {
-        this.currentView = q.get("view") || "search";
+        this.currentView = "search";
         this.entityDetail = null;
+        this.requestUpdate();
+      }
+    });
+
+    window.addEventListener("popstate", () => {
+      if (!location.hash) {
+        const q = new URLSearchParams(location.search);
+        if (q.has("entity")) {
+          const id = q.get("entity")?.split("/")[0];
+          const n = this.data?.nodes?.find((n) => n.id === id);
+          if (n) { this.entityDetail = n; this.currentView = "detail"; this.requestUpdate(); }
+        } else {
+          this.currentView = q.get("view") || "search";
+          this.entityDetail = null;
+          this.requestUpdate();
+        }
       }
     });
   }
 
   _pushUrl() {
-    const sp = new URLSearchParams();
     if (this.currentView === "detail" && this.entityDetail) {
-      var slug = (this.entityDetail.l || "").toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "").substring(0, 60);
-      sp.set("entity", this.entityDetail.id + (slug ? "/" + slug : ""));
-    } else if (this.currentView !== "search") {
-      sp.set("view", this.currentView);
+      if (location.hash !== "#" + this.entityDetail.id) {
+        location.hash = this.entityDetail.id;
+      }
+    } else {
+      if (location.hash) {
+        history.pushState("", document.title, location.pathname + location.search);
+      }
     }
-    const qs = sp.toString();
-    history.pushState({}, "", qs ? "?" + qs : location.pathname);
   }
 
   async _loadData() {
