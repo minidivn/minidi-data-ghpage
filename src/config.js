@@ -1,0 +1,36 @@
+export default {
+  countryCode: "xx",
+  countryName: "Demo",
+  countryEmoji: "🌍",
+  languages: ["en"],
+  defaultLanguage: "en",
+  title: "Demo Knowledge Graph",
+  splashTitle: "🌍 MiniDi",
+  splashMessage: "Loading demo...",
+  githubRepo: "minidivn/minidi-vn-data",
+  mapCenter: [20, 0],
+  mapZoom: 2,
+  slides: [
+    { label: "Sample Image", lang: "en", img: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1200&q=80", grad: "#1e3a5f" },
+  ],
+  eras: [
+    { id: "ancient", emoji: "🏛️", label: { en: "Ancient" }, years: [-3000, 500], color: "#8b5cf6" },
+    { id: "medieval", emoji: "🏰", label: { en: "Medieval" }, years: [500, 1500], color: "#f59e0b" },
+    { id: "modern", emoji: "📸", label: { en: "Modern" }, years: [1500, 9999], color: "#22c55e" },
+  ],
+  translations: {
+    en: {
+      entities: "Entities", events: "Events", people: "People", places: "Places",
+      all: "All", search: "Search...", noResults: "No matching entities",
+      results: "{n} results", page: "Page {p} of {t}",
+      prev: "Prev", next: "Next", details: "Details", relations: "Relations",
+      wiki: "Open in WikiData", timeline: "Timeline", tree: "Dynasty Tree",
+      builtWith: "Built with", source: "source",
+      chatPlaceholder: "Ask about the graph...",
+      entitiesTotal: "{n} entities",
+      mapPlaces: "Places", mapPeople: "People", mapEvents: "Events",
+    },
+  },
+  chatCountry: "the graph",
+  chatGreeting: "Ask me about the knowledge graph — history, people, places, events.",
+};
